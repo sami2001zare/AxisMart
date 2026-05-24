@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/00 - Framework/">
+    <Project Path="Framework/AxisMart.Framework/AxisMart.Framework.csproj" Id="8e59697f-79a4-4ef7-9a00-aac33b36fe56" />
+  </Folder>
+  <Folder Name="/src/01 - Core/">
+    <Project Path="Core/AxisMart.Core.Ecommerce/AxisMart.Core.Ecommerce.csproj" Id="a38db671-3304-43cb-8dbf-c22d0ecbaa21" />
+  </Folder>
+  <Folder Name="/src/02 - Application/">
+    <Project Path="Application/AxisMart.Application.Ecommerce/AxisMart.Application.Ecommerce.csproj" Id="b68d5f34-856e-413a-8aaf-19fe4d4cb30e" />
+    <Project Path="Application/AxisMart.Application.Shared/AxisMart.Application.Shared.csproj" Id="b736857d-72c3-4619-8c2b-98c56f55a90c" />
+  </Folder>
+  <Folder Name="/src/03 - Infrastructure/">
+    <Project Path="Infra/AxisMart.Infra.Ecommerce/AxisMart.Infra.Ecommerce.csproj" Id="d5d0fbab-599e-4822-b145-eb42b20078de" />
+  </Folder>
+  <Folder Name="/src/04 - Presentation/">
+    <Project Path="AxisMart.Prez.Ecommerce/AxisMart.Prez.Ecommerce.csproj" Id="3e96f8b3-346b-4fe0-8a0b-b1b22e388b8d" />
+  </Folder>
+</Solution>

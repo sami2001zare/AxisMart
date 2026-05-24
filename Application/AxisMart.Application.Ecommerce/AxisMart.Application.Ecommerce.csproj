@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="User\Customer\ForgotPassword\" />
+		<Folder Include="User\Customer\Logout\" />
+		<Folder Include="User\Customer\LoginWithOTP\" />
+		<Folder Include="User\Customer\Login\" />
+		<Folder Include="User\Manager\ForgotPassword\" />
+		<Folder Include="User\Manager\LoginWithOTP\" />
+		<Folder Include="User\Manager\Login\" />
+		<Folder Include="User\Manager\Logout\" />
+		<Folder Include="User\Manager\Register\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\AxisMart.Core.Ecommerce\AxisMart.Core.Ecommerce.csproj" />
+		<ProjectReference Include="..\AxisMart.Application.Shared\AxisMart.Application.Shared.csproj" />
+	</ItemGroup>
+
+</Project>
