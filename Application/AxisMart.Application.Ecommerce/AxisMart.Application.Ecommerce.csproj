@@ -10,7 +10,6 @@
 		<Folder Include="User\Customer\ForgotPassword\" />
 		<Folder Include="User\Customer\Logout\" />
 		<Folder Include="User\Customer\LoginWithOTP\" />
-		<Folder Include="User\Customer\Login\" />
 		<Folder Include="User\Manager\ForgotPassword\" />
 		<Folder Include="User\Manager\LoginWithOTP\" />
 		<Folder Include="User\Manager\Login\" />

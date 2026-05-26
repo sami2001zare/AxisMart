@@ -2,4 +2,4 @@
 
 namespace AxisMart.Core.Ecommerce.User.Events;
 
-public sealed record EmailChangedEvent() : IDomainEvent;
+public sealed record LoggedInEvent() : IDomainEvent;
