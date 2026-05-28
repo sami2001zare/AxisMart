@@ -1,3 +1,4 @@
+using AxisMart.Application.Ecommerce.User.Customer.Logout;
 using AxisMart.Application.Ecommerce.User.Customer.Register;
 using AxisMart.Core.Ecommerce.User.ValueObjects;
 using MediatR;
@@ -22,6 +23,15 @@ public class CustomersController : ControllerBase
     public async Task<IActionResult> Register(RegisterCustomer register, CancellationToken cancellationToken)
     {
         var command = new RegisterCustomerCommand(new FirstName(register.FirstName), new LastName(register.LastName), new Email(register.Email), new Phone(register.Phone), register.Password);
+        var result = await _mediator.Send(command, cancellationToken);
+
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(CancellationToken cancellationToken)
+    {
+        var command = new LogoutCustomerCommand();
         var result = await _mediator.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result) : BadRequest(result);

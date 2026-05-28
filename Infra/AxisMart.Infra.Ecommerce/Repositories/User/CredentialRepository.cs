@@ -1,5 +1,6 @@
 ﻿using AxisMart.Core.Ecommerce.User;
 using AxisMart.Core.Ecommerce.User.Repositpry;
+using Microsoft.EntityFrameworkCore;
 
 namespace AxisMart.Infra.Ecommerce.Repositories.User;
 
@@ -42,5 +43,10 @@ internal sealed class CredentialRepository(AxisMartContext axisMartContext) : IC
     public Task<Credential?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<Credential?> GetByUserIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await axisMartContext.Credentials.FirstOrDefaultAsync(i => i.UserId == id, cancellationToken);
     }
 }

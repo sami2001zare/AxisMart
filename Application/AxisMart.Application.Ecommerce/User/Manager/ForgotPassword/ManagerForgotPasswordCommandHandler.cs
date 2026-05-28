@@ -1,0 +1,53 @@
+﻿using AxisMart.Application.Shared.Authentication;
+using AxisMart.Application.Shared.Generator;
+using AxisMart.Application.Shared.Messaging.Command;
+using AxisMart.Core.Ecommerce.User.Repositpry;
+using AxisMart.Framework;
+using AxisMart.Framework.Repository;
+
+namespace AxisMart.Application.Ecommerce.User.Manager.ForgotPassword;
+
+internal sealed class ManagerForgotPasswordCommandHandler(
+    IAdministratorRepository _customerRepository,
+    ICredentialRepository _credentialRepository,
+    IUnitOfWork _unitOfWork,
+    IIdGenerator idGenerator,
+    IPasswordHasher passwordHasher,
+    ITextMessageService textMessageService
+    ) : ICortexCommandHandler<ManagerForgotPasswordCommand, string>
+{
+    public async Task<Result<string>> Handle(ManagerForgotPasswordCommand request, CancellationToken cancellationToken)
+    {
+        var manager = await _customerRepository.GetGraphAsync(request.Id, cancellationToken);
+
+        if (manager == null)
+        {
+            return Result.Failure<string>(new Error("", ""));
+        }
+
+        var credential = await _credentialRepository.GetByUserIdAsync(manager.Id, cancellationToken);
+
+        if (credential == null)
+        {
+            return Result.Failure<string>(new Error("", ""));
+        }
+
+        try
+        {
+            string randomPass = await idGenerator.GenerateRandomPassword();
+            credential.SetPasswod(passwordHasher.Hash(randomPass));
+
+            _unitOfWork.Update(credential);
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            await textMessageService.SendForgotPasswordAsync(manager.Phone.Value, randomPass, cancellationToken);
+
+            return Result.Success(randomPass);
+        }
+        catch (Exception)
+        {
+            return Result.Failure<string>(new Error("", ""));
+        }
+    }
+}

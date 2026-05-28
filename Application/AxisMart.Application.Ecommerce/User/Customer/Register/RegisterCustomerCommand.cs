@@ -76,7 +76,6 @@ internal sealed class OneTimePasswordIssuedDomainEventHandler(IOneTimePasswordRe
 
 public sealed record AuthResponse(string AccessToken, DateTime ExpiresIn);
 
-
 public sealed record ChangePasswordByAdminCommand();
 public sealed record ChangePasswordByCustomerCommand();
 public sealed record ChangePasswordOnLoginCommand();

@@ -31,4 +31,9 @@ public class Credential : Entity
 
         return credential;
     }
+
+    public void SetPasswod(string hash)
+    {
+        Hash = hash;
+    }
 }
