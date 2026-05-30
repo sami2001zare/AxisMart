@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AxisMart.Infra.Ecommerce.Migrations
 {
     [DbContext(typeof(AxisMartContext))]
-    [Migration("20260503103400_Cred")]
-    partial class Cred
+    [Migration("20260529214950_Salt")]
+    partial class Salt
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,10 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -61,8 +65,27 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Expireation")
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime>("Expiration")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RememberMe")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("RevokedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("RevokedReason")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -89,7 +112,41 @@ namespace AxisMart.Infra.Ecommerce.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("JsonWebToken");
+                    b.ToTable("JsonWebTokens");
+                });
+
+            modelBuilder.Entity("AxisMart.Core.Ecommerce.User.OneTimePassword", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Code")
+                        .HasMaxLength(10)
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmailOrPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsExpired")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("PenaltyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OTPs");
                 });
 
             modelBuilder.Entity("AxisMart.Core.Ecommerce.User.User", b =>
@@ -154,6 +211,23 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                     b.ToTable("Outbox_Messages", (string)null);
                 });
 
+            modelBuilder.Entity("AxisMart.Core.Ecommerce.User.Administrator", b =>
+                {
+                    b.HasBaseType("AxisMart.Core.Ecommerce.User.User");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.ToTable("Administrators");
+                });
+
             modelBuilder.Entity("AxisMart.Core.Ecommerce.User.Customer", b =>
                 {
                     b.HasBaseType("AxisMart.Core.Ecommerce.User.User");
@@ -191,6 +265,15 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AxisMart.Core.Ecommerce.User.Administrator", b =>
+                {
+                    b.HasOne("AxisMart.Core.Ecommerce.User.User", null)
+                        .WithOne()
+                        .HasForeignKey("AxisMart.Core.Ecommerce.User.Administrator", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AxisMart.Core.Ecommerce.User.Customer", b =>

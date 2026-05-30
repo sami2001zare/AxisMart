@@ -1,11 +1,13 @@
 ﻿using AxisMart.Application.Shared.Authentication;
 using AxisMart.Application.Shared.Clock;
 using AxisMart.Application.Shared.Data;
+using AxisMart.Application.Shared.Generator;
 using AxisMart.Core.Ecommerce.User.Repositpry;
 using AxisMart.Framework.Repository;
 using AxisMart.Infra.Ecommerce.Clock;
 using AxisMart.Infra.Ecommerce.Data;
 using AxisMart.Infra.Ecommerce.Outbox;
+using AxisMart.Infra.Ecommerce.Repositories;
 using AxisMart.Infra.Ecommerce.Repositories.User;
 using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,14 +69,17 @@ public static class DependencyInjection
         });
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IAdministratorRepository, AdministratorRepository>();
         services.AddScoped<ICredentialRepository, CredentialRepository>();
         services.AddScoped<IOneTimePasswordRepository, OneTimePasswordRepository>();
+        services.AddScoped<IJsonWebTokenRepository, JsonWebTokenRepository>();
         
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IOtpService, OtpService>();
         services.AddScoped<ITextMessageService, TextMessageService>();
         services.AddScoped<IJwtService, JwtTokenService>();
         services.AddScoped<IRsaKeyProvider, RsaKeyProvider>();
+        services.AddScoped<IIdGenerator, IdGenerator>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AxisMartContext>());
     }

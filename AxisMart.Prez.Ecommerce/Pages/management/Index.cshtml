@@ -1,0 +1,78 @@
+﻿@page
+@model AxisMart.Prez.Ecommerce.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "داشبورد مدیریت";
+    Layout = "_AdminLayout";
+}
+
+<div class="space-y-6">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm card-hover flex items-center justify-between">
+            <div><p class="text-gray-500 text-sm">فروش امروز</p><p class="text-2xl font-bold">۱۲,۴۰۰,۰۰۰</p><span class="text-green-500 text-xs">+۱۵%</span></div>
+            <i class="fas fa-credit-card text-3xl text-indigo-400"></i>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm card-hover flex items-center justify-between">
+            <div><p class="text-gray-500 text-sm">سفارشات جدید</p><p class="text-2xl font-bold">۳۴</p><span class="text-green-500 text-xs">+۴</span></div>
+            <i class="fas fa-truck text-3xl text-indigo-400"></i>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm card-hover flex items-center justify-between">
+            <div><p class="text-gray-500 text-sm">کاربران فعال</p><p class="text-2xl font-bold">۱,۲۸۰</p><span class="text-green-500 text-xs">+۱۲%</span></div>
+            <i class="fas fa-user-friends text-3xl text-indigo-400"></i>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm card-hover flex items-center justify-between">
+            <div><p class="text-gray-500 text-sm">محصولات در انبار</p><p class="text-2xl font-bold">۴۲۹</p></div>
+            <i class="fas fa-boxes text-3xl text-indigo-400"></i>
+        </div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg">نمودار فروش ماهانه</h3>
+            <select class="border rounded-lg px-2 py-1 text-sm dark:bg-gray-700">
+                <option>۱۴۰۴</option>
+                <option>۱۴۰۳</option>
+            </select>
+        </div>
+        <canvas id="salesChart" height="100"></canvas>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg">آخرین سفارشات</h3>
+            <a href="/Admin/Orders" class="text-indigo-600 text-sm">مشاهده همه</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+                <thead class="bg-gray-50 dark:bg-gray-700 border-b">
+                    <tr class="text-right">
+                        <th class="px-4 py-3">شماره سفارش</th>
+                        <th>مشتری</th>
+                        <th>مبلغ</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b hover:bg-gray-50 dark:hover:bg-gray-700"><td class="px-4 py-2">#۱۰۰۱۲</td><td>علی رضایی</td><td>۳,۲۰۰,۰۰۰</td><td><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs">در انتظار</span></td><td><i class="fas fa-edit text-gray-400 hover:text-indigo-600"></i></td></tr>
+                    <tr class="border-b hover:bg-gray-50 dark:hover:bg-gray-700"><td class="px-4 py-2">#۱۰۰۱۱</td><td>سارا محمدی</td><td>۵,۴۰۰,۰۰۰</td><td><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">ارسال شده</span></td><td><i class="fas fa-edit text-gray-400 hover:text-indigo-600"></i></td></tr>
+                    <tr class="border-b hover:bg-gray-50 dark:hover:bg-gray-700"><td class="px-4 py-2">#۱۰۰۱۰</td><td>رضا کریمی</td><td>۱,۲۰۰,۰۰۰</td><td><span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs">لغو شده</span></td><td><i class="fas fa-edit"></i></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور'],
+            datasets: [{ label: 'فروش (میلیون تومان)', data: [12, 19, 15, 17, 25, 22], borderColor: '#6366f1', tension: 0.3 }]
+        },
+        options: { responsive: true, maintainAspectRatio: true }
+    });
+</script>

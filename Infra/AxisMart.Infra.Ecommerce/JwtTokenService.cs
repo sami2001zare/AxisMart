@@ -36,11 +36,12 @@ public sealed class JwtTokenService : IJwtService
         {
             new(JwtRegisteredClaimNames.Sub,  user.Id.ToString()),
             new(JwtRegisteredClaimNames.Jti,  Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Iat,
-                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
-                ClaimValueTypes.Integer64),
-            new(ClaimTypes.Role, user is Customer ? "customer" : user is Administrator ? "manager" : ""),
-            new("email_verified", false.ToString().ToLower()),
+            new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
+            new(ClaimTypes.Role, user is Customer ? "Customer" : user is Administrator ? "Manager" : ""),
+            new(JwtRegisteredClaimNames.Name, $"{user.FirstName.Value} {user.LastName.Value}"),
+            new(JwtRegisteredClaimNames.GivenName, $"{user.FirstName.Value}"),
+            new(JwtRegisteredClaimNames.FamilyName, $"{user.LastName.Value}"),
+            new(JwtRegisteredClaimNames.PhoneNumber, $"{user.Phone.Value}"),
         };
 
         //claims.AddRange(
@@ -72,9 +73,14 @@ public sealed class JwtTokenService : IJwtService
             new(JwtRegisteredClaimNames.Iat,
                 DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(),
                 ClaimValueTypes.Integer64),
-            new(ClaimTypes.Role, user is Customer ? "customer" : user is Administrator ? "manager" : ""),
+            new(ClaimTypes.Role, user is Customer ? "Customer" : user is Administrator ? "Manager" : ""),
             new("email_verified", false.ToString().ToLower()),
         };
+
+        if (user is Customer c)
+        {
+            claims.Add(new Claim(JwtRegisteredClaimNames.PhoneNumberVerified, c.IsPhoneVerified.ToString()));
+        }
 
         //claims.AddRange(
         //    user.Permissions.Select(p => new Claim("permission", p.ToString()))

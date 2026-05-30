@@ -58,6 +58,6 @@ public class Customer : User
 
     public void VerifyPhone()
     {
-        IsEmailVerified = true;
+        IsPhoneVerified = true;
     }
 }

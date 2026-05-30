@@ -6,18 +6,15 @@ public sealed class PasswordHasher : IPasswordHasher
 {
     // Current recommended parameters
     private const int CurrentIterations = 600_000; // OWASP 2023 recommendation for PBKDF2-SHA512
-    private const int SaltSize = 16;      // 128-bit salt
     private const int HashSize = 32;      // 256-bit output
     private HashAlgorithmName Algorithm = HashAlgorithmName.SHA512;
     private const char Delimiter = '$';
 
-    // Format: pbkdf2$SHA512$600000$<base64salt>$<base64hash>
+    // Format: <base64salt>$<base64hash>
 
-    public string Hash(string password)
+    public string Hash(string password, byte[] salt)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(password);
-
-        var salt = RandomNumberGenerator.GetBytes(SaltSize);
 
         var hash = Rfc2898DeriveBytes.Pbkdf2(
             password: password,
@@ -27,10 +24,7 @@ public sealed class PasswordHasher : IPasswordHasher
             outputLength: HashSize
         );
 
-        return string.Join(Delimiter,
-            "pbkdf2",
-            Algorithm.Name,
-            CurrentIterations,
+        return string.Join("",
             Convert.ToBase64String(salt),
             Convert.ToBase64String(hash)
         );

@@ -7,6 +7,7 @@ using AxisMart.Framework;
 using AxisMart.Framework.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AxisMart.Application.Ecommerce.User.Customer.Login;
@@ -27,39 +28,16 @@ internal sealed class LoginManagerCommandHandler(
 
     public async Task<Result<AccessToken>> Handle(LoginCustomerCommand request, CancellationToken cancellationToken)
     {
-
-        string inputType = GetInputType(request.EmailOrPhone);
-
-        if (inputType == "Unknown")
-        {
-            return Result.Failure<AccessToken>(new Error("", ""));
-        }
-
-
-        Core.Ecommerce.User.Customer? customer = null;
-
-        if (inputType == "Email")
-        {
-            customer = await _customerRepository.GetByEmailAsync(new Email(request.EmailOrPhone), cancellationToken);
-
-            return Result.Failure<AccessToken>(new Error("", ""));
-        }
-
-        else if (inputType == "Phone")
-        {
-            customer = await _customerRepository.GetByPhoneAsync(new Phone(request.EmailOrPhone), cancellationToken);
-
-            return Result.Failure<AccessToken>(new Error("", ""));
-        }
+        Core.Ecommerce.User.Customer? customer = await _customerRepository.GetByPhoneAsync(new Phone(request.EmailOrPhone), cancellationToken);
 
         var customerI = await _customerRepository.GetCustomerGraphAsync(customer.Id, cancellationToken);
 
-        if (customerI.Credential!.Hash != passwordHasher.Hash(request.Password))
+        string hash = passwordHasher.Hash(request.Password, Convert.FromBase64String(customerI.Credential!.Salt));
+
+        if (customerI.Credential!.Hash != hash)
         {
             return Result.Failure<AccessToken>(new Error("", ""));
-
         }
-
 
         AccessToken token = await _jwtService.GetAccessTokenWithMetadataAsync(customer, cancellationToken);
 
@@ -71,15 +49,4 @@ internal sealed class LoginManagerCommandHandler(
         return token;
     }
 
-
-    public static string GetInputType(string input)
-    {
-        if (Regex.IsMatch(input, EmailRegex))
-            return "Email";
-
-        if (Regex.IsMatch(input, PersianPhoneRegex))
-            return "Phone";
-
-        return "Unknown";
-    }
 }

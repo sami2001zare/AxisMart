@@ -1,0 +1,112 @@
+﻿@page
+@model AxisMart.Prez.Ecommerce.Pages.IndexModel
+@{
+    ViewData["Title"] = "بلبرینگ پارسا";
+}
+<h1>بلبرینگ پارسا</h1>
+
+<!-- Hero Carousel with Touch Support -->
+<div x-data="carousel()" x-init="init()" class="relative w-full overflow-hidden h-96 md:h-[500px] group">
+    <div class="relative w-full h-full">
+        <template x-for="(slide, idx) in slides" :key="idx">
+            <div class="absolute inset-0 transition-opacity duration-700" :class="idx === current ? 'opacity-100' : 'opacity-0'" x-html="slide.html"></div>
+        </template>
+    </div>
+    <button click="prev" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 text-white p-2 rounded-full hover:bg-black/50 transition"><i class="fas fa-chevron-right"></i></button>
+    <button click ="next" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 text-white p-2 rounded-full hover:bg-black/50 transition"><i class="fas fa-chevron-left"></i></button>
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        <template x-for="(slide, idx) in slides" :key="idx">
+            <button click ="current = idx" class="w-3 h-3 rounded-full transition" :class="idx === current ? 'bg-white opacity-80' : 'bg-white opacity-40'"></button>
+        </template>
+    </div>
+</div>
+
+<script>
+    function carousel() {
+        return {
+            current: 0,
+            slides: [
+                { html: '<div class="w-full h-full bg-gradient-to-l from-indigo-800 to-purple-700 flex items-center justify-center text-white text-center"><h1 class="text-3xl md:text-5xl font-bold">تخفیف ویژه تابستان</h1><p class="mt-4">تا ۵۰٪ تخفیف</p></div>' },
+                { html: '<div class="w-full h-full bg-gradient-to-l from-pink-700 to-rose-600 flex items-center justify-center text-white text-center"><h1 class="text-3xl md:text-5xl font-bold">ارسال رایگان</h1><p class="mt-4">برای خرید بالای ۱ میلیون</p></div>' },
+                { html: '<div class="w-full h-full bg-gradient-to-l from-emerald-700 to-teal-600 flex items-center justify-center text-white text-center"><h1 class="text-3xl md:text-5xl font-bold">جدیدترین گوشی‌ها</h1><p class="mt-4">پیش‌فروش با بهترین قیمت</p></div>' }
+            ],
+            init() {
+                this.interval = setInterval(() => this.next(), 5000);
+            },
+            next() { this.current = (this.current + 1) % this.slides.length; },
+            prev() { this.current = (this.current - 1 + this.slides.length) % this.slides.length; }
+        }
+    }
+</script>
+
+<!-- Categories (same as before) -->
+<section class="container mx-auto px-4 py-12">
+    <!-- ... -->
+</section>
+
+<!-- Products with Quick View Modal -->
+<div x-data="{ quickViewProduct: null }">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">محصولات ویژه</h2>
+            <a href="#" class="text-indigo-600 hover:underline">مشاهده همه</a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="productGrid">
+            <!-- Skeleton loading -->
+            <template x-if="!productsLoaded">
+                <div class="col-span-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 animate-pulse h-80"></div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 animate-pulse h-80"></div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 animate-pulse h-80"></div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 animate-pulse h-80"></div>
+                </div>
+            </template>
+            <!-- Product cards will be injected via JS -->
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div x-show="quickViewProduct" x-cloak class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full p-6 relative" click.away ="quickViewProduct = null">
+            <button click="quickViewProduct = null" class="absolute left-4 top-4 text-2xl">&times;</button>
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="w-full md:w-1/2 h-48 bg-gray-200 dark:bg-gray-700 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-box-open text-5xl text-gray-400"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold" x-text="quickViewProduct.name"></h3>
+                    <p class="text-indigo-600 font-bold mt-2" x-text="quickViewProduct.price"></p>
+                    <p class="text-gray-500 text-sm mt-2" x-text="quickViewProduct.description"></p>
+                    <button class="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg w-full">افزودن به سبد</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simulate loading products and attach quick view
+    document.addEventListener('alpine:init', () => {
+        setTimeout(() => {
+            const products = [
+                { id:1, name:'سامسونگ Galaxy S23', price:'۳۵,۹۰۰,۰۰۰ تومان', description:'گوشی پرچمدار با دوربین عالی' },
+                { id:2, name:'لپ‌تاپ ایسوس TUF', price:'۴۲,۵۰۰,۰۰۰ تومان', description:'مناسب برای بازی و برنامه‌نویسی' },
+                { id:3, name:'هدفون سونی', price:'۱۲,۹۰۰,۰۰۰ تومان', description:'بیسیم با حذف نویز' },
+                { id:4, name:'تیشرت مردانه', price:'۵۹۰,۰۰۰ تومان', description:'نخ کتان با کیفیت' }
+            ];
+            const grid = document.getElementById('productGrid');
+            if (grid) {
+                grid.innerHTML = products.map(p => `
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden card-hover relative">
+                        <div class="h-48 bg-gray-100 dark:bg-gray-700 flex items-center justify-center"><i class="fas fa-mobile-alt text-5xl text-gray-400"></i></div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg">${p.name}</h3>
+                            <div class="mt-1"><span class="text-indigo-600 font-bold">${p.price}</span></div>
+                            <button click="quickViewProduct = ${JSON.stringify(p).replace(/"/g, '&quot;')}" class="mt-3 w-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 py-2 rounded-lg hover:bg-indigo-600 hover:text-white transition">مشاهده سریع</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }, 1000);
+    });
+</script>

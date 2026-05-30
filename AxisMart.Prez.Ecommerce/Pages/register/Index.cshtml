@@ -1,0 +1,48 @@
+﻿@page
+@model AxisMart.Prez.Ecommerce.Pages.register.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "ثبت‌نام | اکسیس‌مارت";
+}
+
+<div class="container mx-auto max-w-md mt-20 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl">
+    <h2 class="text-2xl font-bold text-center mb-6">ثبت‌نام در اکسیس‌مارت</h2>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+
+        <div class="mb-4">
+            <label class="block mb-1">ایمیل</label>
+            <input asp-for="RegisterVm.Email" type="email" class="w-full border dark:border-gray-600 dark:bg-gray-700 rounded-lg px-4 py-2" dir="ltr" />
+            <span asp-validation-for="RegisterVm.Email" class="text-red-500 text-sm"></span>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1">نام</label>
+            <input asp-for="RegisterVm.FirstName" class="w-full border rounded-lg px-4 py-2 dark:bg-gray-700" />
+            <span asp-validation-for="RegisterVm.FirstName" class="text-red-500 text-sm"></span>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1">نام خانوادگی</label>
+            <input asp-for="RegisterVm.LastName" class="w-full border rounded-lg px-4 py-2 dark:bg-gray-700" />
+            <span asp-validation-for="RegisterVm.LastName" class="text-red-500 text-sm"></span>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1">شماره موبایل</label>
+            <input asp-for="RegisterVm.PhoneNumber" type="tel" class="w-full border rounded-lg px-4 py-2 dark:bg-gray-700" dir="ltr" />
+            <span asp-validation-for="RegisterVm.PhoneNumber" class="text-red-500 text-sm"></span>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1">رمز عبور</label>
+            <input asp-for="RegisterVm.Password" type="password" class="w-full border rounded-lg px-4 py-2 dark:bg-gray-700" />
+            <span asp-validation-for="RegisterVm.Password" class="text-red-500 text-sm"></span>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1">تکرار رمز عبور</label>
+            <input asp-for="RegisterVm.ConfirmPassword" type="password" class="w-full border rounded-lg px-4 py-2 dark:bg-gray-700" />
+            <span asp-validation-for="RegisterVm.ConfirmPassword" class="text-red-500 text-sm"></span>
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">ادامه و دریافت کد تایید</button>
+    </form>
+    <div class="mt-4 text-center text-sm">
+        قبلاً ثبت‌نام کرده‌اید؟ <a href="/Account/Login" class="text-indigo-600">وارد شوید</a>
+    </div>
+</div>

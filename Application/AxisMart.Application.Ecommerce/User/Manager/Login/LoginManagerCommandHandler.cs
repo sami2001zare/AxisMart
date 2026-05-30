@@ -5,6 +5,7 @@ using AxisMart.Core.Ecommerce.User.Repositpry;
 using AxisMart.Framework;
 using AxisMart.Framework.Repository;
 using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace AxisMart.Application.Ecommerce.User.Manager.Login;
 
@@ -21,7 +22,7 @@ internal sealed class LoginManagerCommandHandler(
 
         Administrator? customer = await _customerRepository.GetGraphAsync(request.Phone, cancellationToken);
 
-        if (customer.Credential!.Hash != passwordHasher.Hash(request.Password))
+        if (customer.Credential!.Hash != passwordHasher.Hash(request.Password, Convert.FromBase64String(customer.Credential!.Salt)))
         {
             return Result.Failure<AccessToken>(new Error("", ""));
         }

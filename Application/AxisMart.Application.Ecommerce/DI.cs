@@ -13,9 +13,9 @@ public static class DI
         {
             configuration.RegisterServicesFromAssembly(typeof(DI).Assembly);
 
-            configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
+            //configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
 
-            configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            //configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
 
             // configuration.AddOpenBehavior(typeof(QueryCachingBehavior<,>));
         });

@@ -25,6 +25,7 @@ public sealed class AxisMartContext : DbContext, IUnitOfWork
 
     public DbSet<User> Users { get; set; }
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<Administrator> Administrators { get; set; }
     public DbSet<Credential> Credentials { get; set; }
     public DbSet<JsonWebToken> JsonWebTokens { get; set; }
     

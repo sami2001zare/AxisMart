@@ -44,3 +44,41 @@ internal class CustomerRepository(AxisMartContext axisMartContext) : ICustomerRe
             .FirstAsync(cancellationToken);
     }
 }
+
+
+internal class AdministratorRepository(AxisMartContext axisMartContext) : IAdministratorRepository
+{
+    public async Task AddAsync(Administrator administrator, CancellationToken cancellationToken = default)
+    {
+        await axisMartContext.AddAsync(administrator, cancellationToken);
+    }
+
+    public async Task AddRangeAsync(IEnumerable<Administrator> administrators, CancellationToken cancellationToken = default)
+    {
+        await axisMartContext.AddRangeAsync(administrators, cancellationToken);
+    }
+
+    public async Task<IAsyncEnumerable<Administrator>> GetAllAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return axisMartContext.Administrators.AsAsyncEnumerable();
+    }
+
+    public async Task<Administrator?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await axisMartContext.Administrators.FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
+    }
+
+    public async Task<Administrator> GetGraphAsync(Guid customerId, CancellationToken cancellationToken = default)
+    {
+        return await axisMartContext.Administrators.Where(c => c.Id == customerId)
+            .Include(c => c.Credential)
+            .FirstAsync(cancellationToken);
+    }
+
+    public async Task<Administrator> GetGraphAsync(Phone phone, CancellationToken cancellationToken = default)
+    {
+        return await axisMartContext.Administrators.Where(c => c.Phone == phone)
+            .Include(c => c.Credential)
+            .FirstAsync(cancellationToken);
+    }
+}

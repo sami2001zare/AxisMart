@@ -12,6 +12,39 @@ namespace AxisMart.Infra.Ecommerce.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "OTPs",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    EmailOrPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PenaltyTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsExpired = table.Column<bool>(type: "bit", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OTPs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Outbox_Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccurredOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProcessedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Error = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Outbox_Messages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -27,7 +60,26 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Credential",
+                name: "Administrators",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Administrators", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Administrators_Users_Id",
+                        column: x => x.Id,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Credentials",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -38,9 +90,9 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Credential", x => x.Id);
+                    table.PrimaryKey("PK_Credentials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Credential_Users_UserId",
+                        name: "FK_Credentials_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -68,22 +120,28 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JsonWebToken",
+                name: "JsonWebTokens",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Expireation = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RememberMe = table.Column<bool>(type: "bit", nullable: false),
+                    Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsRevoked = table.Column<bool>(type: "bit", nullable: false),
+                    RevokedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    RevokedReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UsedFor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserAgent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JsonWebToken", x => x.Id);
+                    table.PrimaryKey("PK_JsonWebTokens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_JsonWebToken_Users_UserId",
+                        name: "FK_JsonWebTokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -91,14 +149,14 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Credential_UserId",
-                table: "Credential",
+                name: "IX_Credentials_UserId",
+                table: "Credentials",
                 column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_JsonWebToken_UserId",
-                table: "JsonWebToken",
+                name: "IX_JsonWebTokens_UserId",
+                table: "JsonWebTokens",
                 column: "UserId");
         }
 
@@ -106,13 +164,22 @@ namespace AxisMart.Infra.Ecommerce.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Credential");
+                name: "Administrators");
+
+            migrationBuilder.DropTable(
+                name: "Credentials");
 
             migrationBuilder.DropTable(
                 name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "JsonWebToken");
+                name: "JsonWebTokens");
+
+            migrationBuilder.DropTable(
+                name: "OTPs");
+
+            migrationBuilder.DropTable(
+                name: "Outbox_Messages");
 
             migrationBuilder.DropTable(
                 name: "Users");

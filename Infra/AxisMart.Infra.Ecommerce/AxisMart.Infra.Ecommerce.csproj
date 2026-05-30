@@ -33,4 +33,8 @@
 		<ProjectReference Include="..\..\Application\AxisMart.Application.Shared\AxisMart.Application.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
+
 </Project>

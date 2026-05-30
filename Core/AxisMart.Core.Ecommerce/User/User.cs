@@ -21,8 +21,8 @@ public abstract class User : Entity
     public List<JsonWebToken> WebTokens { get; set; } = [];
 
 
-    protected void SetCredential(string hash, Guid userId)
+    protected void SetCredential(string hash, string salt, Guid userId)
     {
-        Credential = Credential.Create(hash, userId);
+        Credential = Credential.Create(hash, salt, userId);
     }
 }

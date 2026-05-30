@@ -4,6 +4,8 @@ using AxisMart.Core.Ecommerce.User;
 using AxisMart.Core.Ecommerce.User.Repositpry;
 using AxisMart.Framework;
 using AxisMart.Framework.Repository;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AxisMart.Application.Ecommerce.User.Customer.Register;
 
@@ -15,15 +17,20 @@ internal sealed class RegisterCustomerCommandHandler(ICustomerRepository _userRe
     public async Task<Result<Guid>> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
     {
         //Validate email uniqueness
-        if (await _userRepository.GetByEmailAsync(request.Email, cancellationToken) is not null)
+        //if (await _userRepository.GetByEmailAsync(request.Email, cancellationToken) is not null)
+        //    return Result.Failure<Guid>(new Error("", ""));
+
+        if (await _userRepository.GetByPhoneAsync(request.Phone, cancellationToken) is not null)
             return Result.Failure<Guid>(new Error("", ""));
 
         // Create user aggregate
         var user = Core.Ecommerce.User.Customer.Register(Guid.CreateVersion7(), request.FirstName, request.LastName, request.Phone);
 
-        string password = _passwordHasher.Hash(request.Password);
+        byte[] salt = RandomNumberGenerator.GetBytes(16);
 
-        Credential credential = Credential.Create(password, user.Id);
+        string password = _passwordHasher.Hash(request.Password, salt);
+
+        Credential credential = Credential.Create(password, Convert.ToBase64String(salt), user.Id);
 
         await _userRepository.AddAsync(user, cancellationToken);
         await _credentialRepository.AddAsync(credential, cancellationToken);

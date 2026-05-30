@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }" x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))" :class="darkMode ? 'dark' : ''">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>@ViewData["Title"] - اکسیس‌مارت</title>
+    <!-- Tailwind + Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        /* custom dark mode overrides */
+        .dark body {
+            background-color: #1e1e2a;
+            color: #e2e8f0;
+        }
+
+        .dark .bg-white, .dark .bg-gray-50 {
+            background-color: #2d2d3a;
+        }
+
+        .dark .text-gray-600, .dark .text-gray-500 {
+            color: #cbd5e1;
+        }
+
+        .dark .border-gray-300 {
+            border-color: #4a4a5a;
+        }
+
+        .dark .bg-indigo-50 {
+            background-color: #2d2a3e;
+        }
+
+        .dark .card-hover {
+            background-color: #2d2d3a;
+        }
+        /* fade transition for page */
+        .page-transition {
+            animation: pageFade 0.3s ease;
+        }
+        /* keyframes pageFade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+         */}
+        /* custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #a5b4fc;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #2d2d3a;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Top Bar -->
+    <div class="bg-indigo-50 dark:bg-indigo-950 text-gray-600 dark:text-gray-300 text-sm py-2 hidden md:block">
+        <div class="container mx-auto px-4 flex justify-between">
+            <div class="flex gap-4">
+                <span><i class="fas fa-phone-alt ml-1 text-indigo-500"></i> ۰۲۱-۱۲۳۴۵۶۷۸</span>
+                <span><i class="fas fa-envelope ml-1 text-indigo-500"></i> support@axismart.com</span>
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-indigo-600">پیگیری سفارش</a>
+                <a href="#" class="hover:text-indigo-600">تماس با ما</a>
+                <!-- Dark mode toggle -->
+                <button click="darkMode = !darkMode" class="mr-4 focus:outline-none">
+                    <i class="fas" :class="darkMode ? 'fa-sun' : 'fa-moon'"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header with mega menu -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <a href="/" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">اکسیس‌مارت</a>
+
+            <!-- Desktop Search -->
+            <div class="hidden md:flex flex-1 max-w-md relative">
+                <input type="text" placeholder="جستجوی محصول..." class="w-full border dark:border-gray-600 dark:bg-gray-700 rounded-full py-2 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="/Account" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600"><i class="fas fa-user text-xl"></i></a>
+                <a href="/Cart" class="text-gray-600 dark:text-gray-300 hover:text-indigo-600 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">۳</span>
+                </a>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-600 dark:text-gray-300 text-2xl focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Desktop Navigation with Mega Menu (hover) -->
+        <div class="hidden md:block bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700">
+            <div class="container mx-auto px-4 py-2 flex gap-6 text-gray-700 dark:text-gray-200 font-medium">
+                <div class="relative group">
+                    <a href="#" class="hover:text-indigo-600 flex items-center gap-1">محصولات <i class="fas fa-chevron-down text-xs"></i></a>
+                    <div class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 shadow-xl rounded-xl p-4 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-50">
+                        <div class="grid grid-cols-1 gap-2">
+                            <a href="#" class="hover:text-indigo-600"><i class="fas fa-mobile-alt ml-2"></i> موبایل</a>
+                            <a href="#" class="hover:text-indigo-600"><i class="fas fa-laptop ml-2"></i> لپ‌تاپ</a>
+                            <a href="#" class="hover:text-indigo-600"><i class="fas fa-headphones ml-2"></i> هدفون</a>
+                            <a href="#" class="hover:text-indigo-600"><i class="fas fa-tshirt ml-2"></i> پوشاک</a>
+                        </div>
+                    </div>
+                </div>
+                <a href="/Offers" class="hover:text-indigo-600">تخفیف‌ها</a>
+                <a href="/Blog" class="hover:text-indigo-600">مجله اکسیس</a>
+                <a href="/Contact" class="hover:text-indigo-600">تماس با ما</a>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileOverlay" class="fixed inset-0 bg-black/50 z-50 hidden md:hidden" style="backdrop-filter: blur(2px);"></div>
+        <div id="mobileNav" class="fixed top-0 right-0 w-3/4 max-w-sm h-full bg-white dark:bg-gray-900 shadow-xl z-50 transform translate-x-full transition-transform duration-300 p-6">
+            <button id="closeMobileNav" class="absolute left-4 top-4 text-2xl">&times;</button>
+            <div class="mt-12 flex flex-col gap-4">
+                <input type="text" placeholder="جستجو..." class="border rounded-full py-2 px-4 w-full dark:bg-gray-800">
+                <a href="/" class="hover:text-indigo-600">خانه</a>
+                <a href="/Products" class="hover:text-indigo-600">محصولات</a>
+                <a href="/Offers" class="hover:text-indigo-600">تخفیف‌ها</a>
+                <a href="/Blog" class="hover:text-indigo-600">مجله</a>
+                <a href="/Contact" class="hover:text-indigo-600">تماس با ما</a>
+                <hr>
+                <button click="darkMode = !darkMode" class="text-right">حالت شب</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-transition">
+        @RenderBody()
+    </main>
+
+    <!-- Footer (same as before but with dark mode classes) -->
+    <footer class="bg-gray-800 dark:bg-gray-900 text-gray-300 pt-12 pb-6 mt-16">
+        <!-- ... same footer content ... -->
+        <div class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-white text-lg font-bold mb-4">اکسیس‌مارت</h3>
+                <p class="text-sm">فروشگاه آنلاین با بهترین قیمت‌ها و ارسال سریع.</p>
+                <div class="flex gap-3 mt-4">
+                    <a href="#" class="hover:text-white text-xl"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-white text-xl"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+            <!-- other columns... -->
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-6 text-center text-xs">
+            <p>© ۱۴۰۴ تمامی حقوق محفوظ است.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu logic
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+        const closeBtn = document.getElementById('closeMobileNav');
+        function toggleMobile(show) {
+            if (show) {
+                mobileNav.classList.remove('translate-x-full');
+                mobileOverlay.classList.remove('hidden');
+            } else {
+                mobileNav.classList.add('translate-x-full');
+                mobileOverlay.classList.add('hidden');
+            }
+        }
+        mobileBtn?.addEventListener('click', () => toggleMobile(true));
+        closeBtn?.addEventListener('click', () => toggleMobile(false));
+        mobileOverlay?.addEventListener('click', () => toggleMobile(false));
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

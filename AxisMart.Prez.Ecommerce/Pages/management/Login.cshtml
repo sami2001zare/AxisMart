@@ -1,0 +1,45 @@
+﻿@page
+@model AxisMart.Prez.Ecommerce.Pages.management.LoginModel
+@{
+    Layout = null;
+    ViewData["Title"] = "ورود مدیران | اکسیس‌مارت";
+}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
+            <div class="text-center mb-6">
+                <div class="text-3xl font-bold text-indigo-600">اکسیس‌مارت</div>
+                <p class="text-gray-500 mt-2">پنل مدیریت</p>
+            </div>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+                <div class="mb-4">
+                    <label class="block mb-1">نام کاربری</label>
+                    <input asp-for="LoginVm.Phone" class="w-full border rounded-lg px-4 py-2 dark:bg-gray-700" />
+                    <span asp-validation-for="LoginVm.Phone" class="text-red-500 text-sm"></span>
+                </div>
+                <div class="mb-4">
+                    <label class="block mb-1">رمز عبور</label>
+                    <input asp-for="LoginVm.Password" type="password" class="w-full border rounded-lg px-4 py-2 dark:bg-gray-700" />
+                    <span asp-validation-for="LoginVm.Password" class="text-red-500 text-sm"></span>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">ورود به پنل مدیریت</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

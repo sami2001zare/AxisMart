@@ -1,0 +1,132 @@
+﻿@page
+@model AxisMart.Prez.Ecommerce.Pages.Register.VerifyRegistrationOtpModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "تایید کد ثبت‌نام";
+}
+
+<div class="container mx-auto max-w-lg mt-20 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl">
+    <h2 class="text-2xl font-bold text-center mb-2">تایید کد</h2>
+    <p class="text-center text-gray-500 mb-2">
+        کد ۶ رقمی ارسال شده به
+        <span dir="ltr" class="font-mono">@HttpContext.Session.GetString("PhoneNumber")</span>
+        را وارد کنید
+    </p>
+
+    <form id="otpForm" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-4"></div>
+
+        <!-- OTP Input Boxes (6 digits) -->
+        <div class="flex justify-center gap-2 md:gap-4 mb-6" id="otpContainer" dir="ltr">
+            <input type="text" maxlength="1" class="otp-input w-12 h-12 md:w-14 md:h-14 text-center text-2xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700" data-index="0" />
+            <input type="text" maxlength="1" class="otp-input w-12 h-12 md:w-14 md:h-14 text-center text-2xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700" data-index="1" />
+            <input type="text" maxlength="1" class="otp-input w-12 h-12 md:w-14 md:h-14 text-center text-2xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700" data-index="2" />
+            <input type="text" maxlength="1" class="otp-input w-12 h-12 md:w-14 md:h-14 text-center text-2xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700" data-index="3" />
+            <input type="text" maxlength="1" class="otp-input w-12 h-12 md:w-14 md:h-14 text-center text-2xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700" data-index="4" />
+            <input type="text" maxlength="1" class="otp-input w-12 h-12 md:w-14 md:h-14 text-center text-2xl border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700" data-index="5" />
+        </div>
+        <input type="hidden" id="fullOtp" name="OtpCode" />
+
+        <!-- Timer Display -->
+        <div class="text-center mb-4">
+            <span id="timerDisplay" class="text-indigo-600 font-bold text-lg"></span>
+            <span class="text-gray-500 text-sm"> زمان باقی‌مانده</span>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
+            تایید و تکمیل ثبت‌نام
+        </button>
+    </form>
+
+    <!-- Resend Form -->
+    <form method="post" asp-page-handler="Resend" id="resendForm" class="mt-4 text-center">
+        <button type="submit" id="resendBtn" disabled class="text-indigo-600 disabled:text-gray-400 disabled:cursor-not-allowed">
+            ارسال مجدد کد
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    @* <partial name="_ValidationScriptsPartial" /> *@
+    <script>
+        // OTP input handling
+        const inputs = document.querySelectorAll('.otp-input');
+        const fullOtpHidden = document.getElementById('fullOtp');
+        const submitBtn = document.getElementById('submitBtn');
+        const resendBtn = document.getElementById('resendBtn');
+        const timerDisplay = document.getElementById('timerDisplay');
+
+        // Timer: 120 seconds (adjust as needed)
+        let timeLeft = 120;
+        let timerInterval;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerDisplay.innerText = "۰۰:۰۰";
+                resendBtn.disabled = false;
+                resendBtn.classList.remove('disabled:text-gray-400');
+            }
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                } else {
+                    timeLeft--;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        // Combine OTP digits into hidden field before submit
+        function updateFullOtp() {
+            let otp = '';
+            inputs.forEach(input => { otp += input.value; });
+            fullOtpHidden.value = otp;
+            // Enable submit only if all 6 digits are filled
+            submitBtn.disabled = (otp.length !== 6);
+        }
+
+        // Auto-focus next input on typing
+        inputs.forEach((input, idx) => {
+            input.addEventListener('input', (e) => {
+                const val = e.target.value;
+                if (val.length === 1 && idx < inputs.length - 1) {
+                    inputs[idx + 1].focus();
+                }
+                updateFullOtp();
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && idx > 0 && input.value === '') {
+                    inputs[idx - 1].focus();
+                }
+            });
+            // Allow paste event: fill all boxes from clipboard
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData || window.clipboardData).getData('text').trim();
+                if (/^\d{6}$/.test(paste)) {
+                    const digits = paste.split('');
+                    inputs.forEach((inp, i) => { inp.value = digits[i]; });
+                    updateFullOtp();
+                    // Auto-submit after paste?
+                    // if (fullOtpHidden.value.length === 6) document.getElementById('otpForm').submit();
+                }
+            });
+        });
+
+        // Start timer on page load
+        startTimer();
+
+        // Disable resend button if timer still active
+        if (timeLeft <= 0) {
+            resendBtn.disabled = false;
+        }
+    </script>
+}

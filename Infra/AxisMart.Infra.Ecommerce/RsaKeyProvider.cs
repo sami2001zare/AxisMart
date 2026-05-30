@@ -17,7 +17,7 @@ public sealed class RsaKeyProvider : IRsaKeyProvider, IDisposable
 
         // ── Private Key ────────────────────────────────────────
         var privateRsa = RSA.Create();
-        privateRsa.ImportFromPem(config.PrivateKeyPem);
+        //privateRsa.ImportFromPem(config.PrivateKeyPem);
 
         // Validate minimum key size (2048-bit minimum, 4096 recommended)
         if (privateRsa.KeySize < 2048)
@@ -31,7 +31,7 @@ public sealed class RsaKeyProvider : IRsaKeyProvider, IDisposable
 
         // ── Public Key ─────────────────────────────────────────
         var publicRsa = RSA.Create();
-        publicRsa.ImportFromPem(config.PublicKeyPem);
+        // publicRsa.ImportFromPem(config.PublicKeyPem);
 
         _publicKey = new RsaSecurityKey(publicRsa)
         {

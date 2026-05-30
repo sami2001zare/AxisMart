@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Infra\AxisMart.Infra.Ecommerce\AxisMart.Infra.Ecommerce.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

@@ -15,6 +15,11 @@ public sealed partial class JsonWebToken : Entity
         UserId = userId;
     }
 
+    protected JsonWebToken()
+    {
+        
+    }
+
     public string Token { get; private set; } = string.Empty!;
     public bool RememberMe { get; private set; }
     public DateTime Expiration { get; set; }

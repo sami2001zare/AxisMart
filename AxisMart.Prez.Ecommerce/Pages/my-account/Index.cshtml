@@ -1,0 +1,74 @@
+﻿@page
+@model AxisMart.Prez.Ecommerce.Pages.my_account.IndexModel
+@{
+    ViewData["Title"] = "پیشخوان کاربر";
+    Layout = "_CustomerLayout";
+}
+
+<div class="space-y-6">
+    <!-- Welcome Banner -->
+    <div class="bg-gradient-to-l from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
+        <h2 class="text-2xl font-bold">خوش آمدید، شهرام 👋</h2>
+        <p class="opacity-90">از اینکه به اکسیس‌مارت اعتماد کردید سپاسگزاریم. امتیاز شما: ۱,۲۵۰ امتیاز</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm card-hover">
+            <i class="fas fa-truck-fast text-indigo-500 text-2xl"></i>
+            <p class="text-gray-500 mt-2">سفارش در حال ارسال</p>
+            <p class="text-2xl font-bold">۲</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm card-hover">
+            <i class="fas fa-check-circle text-green-500 text-2xl"></i>
+            <p class="text-gray-500 mt-2">سفارش تحویل شده</p>
+            <p class="text-2xl font-bold">۱۴</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm card-hover">
+            <i class="fas fa-coins text-amber-500 text-2xl"></i>
+            <p class="text-gray-500 mt-2">امتیاز جایزه</p>
+            <p class="text-2xl font-bold">۱,۲۵۰</p>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg">آخرین سفارشات شما</h3>
+            <a href="/Customer/Orders" class="text-indigo-600 text-sm">مشاهده همه</a>
+        </div>
+        <div class="space-y-3">
+            <div class="flex flex-wrap justify-between items-center border-b pb-3">
+                <div><span class="font-medium">سفارش #۱۲۳۴۵</span><p class="text-xs text-gray-400">۱۴ بهمن ۱۴۰۴</p></div>
+                <div><span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">تحویل شده</span></div>
+                <div class="text-indigo-600 font-bold">۲,۳۰۰,۰۰۰ تومان</div>
+                <button class="text-indigo-600 text-sm">جزئیات</button>
+            </div>
+            <div class="flex flex-wrap justify-between items-center border-b pb-3">
+                <div><span class="font-medium">سفارش #۱۲۳۴۶</span><p class="text-xs text-gray-400">۲۰ بهمن ۱۴۰۴</p></div>
+                <div><span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">در حال پردازش</span></div>
+                <div class="text-indigo-600 font-bold">۵۴۰,۰۰۰ تومان</div>
+                <button class="text-indigo-600 text-sm">جزئیات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggested Products (quick recommendation) -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+        <h3 class="font-bold text-lg mb-4">پیشنهاد ویژه برای شما</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="border dark:border-gray-700 rounded-xl p-3 text-center hover:shadow transition">
+                <i class="fas fa-mobile-alt text-2xl text-gray-500"></i><p class="text-sm mt-1">گوشی شیائومی</p><p class="text-indigo-600 text-xs">تخفیف ۲۰٪</p>
+            </div>
+            <div class="border dark:border-gray-700 rounded-xl p-3 text-center hover:shadow transition">
+                <i class="fas fa-watch text-2xl text-gray-500"></i><p class="text-sm mt-1">ساعت هوشمند</p><p class="text-indigo-600 text-xs">ارسال رایگان</p>
+            </div>
+            <div class="border dark:border-gray-700 rounded-xl p-3 text-center hover:shadow transition">
+                <i class="fas fa-shoe-prints text-2xl text-gray-500"></i><p class="text-sm mt-1">کفش ورزشی</p><p class="text-indigo-600 text-xs">فروش ویژه</p>
+            </div>
+            <div class="border dark:border-gray-700 rounded-xl p-3 text-center hover:shadow transition">
+                <i class="fas fa-book text-2xl text-gray-500"></i><p class="text-sm mt-1">کتاب مدیریت</p><p class="text-indigo-600 text-xs">۳۰٪ تخفیف</p>
+            </div>
+        </div>
+    </div>
+</div>

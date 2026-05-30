@@ -3,6 +3,8 @@ using AxisMart.Application.Shared.Messaging.Command;
 using AxisMart.Core.Ecommerce.User.Repositpry;
 using AxisMart.Framework;
 using AxisMart.Framework.Repository;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AxisMart.Application.Ecommerce.User.Manager.ChangePassword;
 
@@ -23,7 +25,10 @@ internal sealed class ManagerChangePasswordCommandHandler(
 
         try
         {
-            customer.Credential!.SetPasswod(passwordHasher.Hash(request.NewPassword));
+            byte[] salt = RandomNumberGenerator.GetBytes(16);
+
+            customer.Credential!.SetPasswod(passwordHasher.Hash(request.NewPassword, salt));
+            customer.Credential!.SetSalt(Convert.ToBase64String(salt));
 
             _unitOfWork.Update(customer);
 

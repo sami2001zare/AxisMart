@@ -14,6 +14,11 @@ public class Administrator : User
         Phone = phone;
     }
 
+    protected Administrator()
+    {
+        
+    }
+
     public UserName UserName { get; private set; }
     public Email Email { get; private set; }
 

@@ -41,6 +41,10 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -58,8 +62,27 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Expireation")
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTime>("Expiration")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RememberMe")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("RevokedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("RevokedReason")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -185,6 +208,43 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                     b.ToTable("Outbox_Messages", (string)null);
                 });
 
+            modelBuilder.Entity("AxisMart.Core.Ecommerce.User.Administrator", b =>
+                {
+                    b.HasBaseType("AxisMart.Core.Ecommerce.User.User");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.ToTable("Administrators");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("019e760f-c583-7dc7-a590-f6b2e09ab5ad"),
+                            FirstName = "رسول",
+                            LastName = "طاهری",
+                            Phone = "09123456789",
+                            Email = "r.taheri@gmail.com",
+                            UserName = "r.taheri"
+                        },
+                        new
+                        {
+                            Id = new Guid("019e760f-c583-70c3-adb6-8d91e2fa3422"),
+                            FirstName = "سامان",
+                            LastName = "زارع",
+                            Phone = "09121039846",
+                            Email = "saman.zare@modare.ac",
+                            UserName = "s.zare"
+                        });
+                });
+
             modelBuilder.Entity("AxisMart.Core.Ecommerce.User.Customer", b =>
                 {
                     b.HasBaseType("AxisMart.Core.Ecommerce.User.User");
@@ -222,6 +282,15 @@ namespace AxisMart.Infra.Ecommerce.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AxisMart.Core.Ecommerce.User.Administrator", b =>
+                {
+                    b.HasOne("AxisMart.Core.Ecommerce.User.User", null)
+                        .WithOne()
+                        .HasForeignKey("AxisMart.Core.Ecommerce.User.Administrator", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AxisMart.Core.Ecommerce.User.Customer", b =>

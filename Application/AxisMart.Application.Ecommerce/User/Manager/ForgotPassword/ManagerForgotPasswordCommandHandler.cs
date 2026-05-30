@@ -4,6 +4,8 @@ using AxisMart.Application.Shared.Messaging.Command;
 using AxisMart.Core.Ecommerce.User.Repositpry;
 using AxisMart.Framework;
 using AxisMart.Framework.Repository;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AxisMart.Application.Ecommerce.User.Manager.ForgotPassword;
 
@@ -34,8 +36,11 @@ internal sealed class ManagerForgotPasswordCommandHandler(
 
         try
         {
+            byte[] salt = RandomNumberGenerator.GetBytes(16);
+
             string randomPass = await idGenerator.GenerateRandomPassword();
-            credential.SetPasswod(passwordHasher.Hash(randomPass));
+            credential.SetPasswod(passwordHasher.Hash(randomPass, salt));
+            credential.SetSalt(Convert.ToBase64String(salt));
 
             _unitOfWork.Update(credential);
 
